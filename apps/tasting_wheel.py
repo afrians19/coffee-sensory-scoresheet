@@ -5,19 +5,42 @@ import matplotlib.pyplot as plt
 import base64
 import SessionState
 import datetime
+import gspread
+from google.oauth2.service_account import Credentials
+import plotly.express as px
+
+# data from gsheet <start>
+scopes = [
+    'https://www.googleapis.com/auth/spreadsheets',
+    'https://www.googleapis.com/auth/drive'
+]
+
+credentials = Credentials.from_service_account_info(
+    st.secrets["gcp_service_account"],
+    scopes=scopes
+)
+
+gc = gspread.authorize(credentials)
+
+sh = gc.open("Coffee Stock")
+
+#select Stock (first sheet)
+worksheet = sh.sheet1
+
+# data from gsheet <end>
+
+flavor_df_temp = 'FlavorWheelRaw.csv'
 
 def app():
     st.write("""
     # Dial in - Tasting Wheel
     """)
 
-    
-
     st.sidebar.header('Input Parameters')
 
     def user_input_features():
         # 1st: min | 2nd: max | 3rd: default value
-        id = st.sidebar.number_input('id', 0, 100, 0)
+        id = st.sidebar.number_input('id', 0, 100, 1)
         dose_g = st.sidebar.number_input('Coffee weight (g)', 0.0, 100.0, 20.0)
         time_s = st.sidebar.number_input('Extraction time (s)', 0, 300, 120)
         yield_ml = st.sidebar.number_input('Yield (ml)', 0, 1000, 45)
@@ -94,22 +117,89 @@ def app():
         features = pd.DataFrame(data, index=[0])
         return features
 
-    def radar_chart(score, category, id):
+    def radar_chart(score, category, name):
         label_loc = np.linspace(start=0, stop=2 * np.pi, num=len(score))
         plt.figure(figsize=(8, 8))
         plt.subplot(polar=True)
         # change the label below to coffee x
-        plt.plot(label_loc, score, label=id)
+        plt.plot(label_loc, score)
         # plt.plot(label_loc, score2, label='score 2')
         # plt.plot(label_loc, score3, label='score 3')
-        plt.title('Taste', size=20, y=1.05)
+        title = f"Coffee: {name} "
+        plt.title(title, size=20, y=1.05)
         lines, labels = plt.thetagrids(np.degrees(label_loc), labels=category)
         plt.legend()
         plt.show()
         st.pyplot(plt)
 
+    def dataGsheet(worksheet, df):
+        df_gsheet = pd.DataFrame(worksheet.get_all_records())
+        df_gsheet = df_gsheet.astype(str)
+        df_gsheet = df_gsheet[[
+            'Id', 'Coffee', 'Notes', 'Process', 'Profilroast', 
+            'Density', 'Age(days)', 'Age(rdtofreeze)']]
+
+        #select row based on id 
+        values_list = df_gsheet.loc[df_gsheet['Id'] == str(df['id'].iloc[0])]
+        return values_list
+
+    def notesGsheet(df_gsheet):
+        values_list_notes = df_gsheet['Notes']
+        values_list_notes = [x for xs in values_list_notes for x in xs.split(',')]
+        values_list_notes = [x.strip(' ') for x in values_list_notes]
+        
+        return values_list_notes
+
+    def initDF(notes, flavorWheelList):
+        flavor_df_temp = pd.read_csv(flavorWheelList)
+        flavor_df_temp = flavor_df_temp.reset_index()  # make sure indexes pair with number of rows
+        header = [{'Parent':10, 'Child':100, 'Grandchild': 1000}]
+        input_df = pd.DataFrame(header)
+        input_df.drop(input_df.index, inplace=True)
+        for index, row in flavor_df_temp.iterrows():
+            for i in notes:
+                if i == row['Grandchild']:
+                    input_data = {'Parent':[row['Parent']], 'Child':[row['Child']], 'Grandchild': [i]}
+                    notes_df = pd.DataFrame(input_data)
+                    input_df = input_df.append(notes_df, ignore_index = True)
+        return input_df
+
+    def flavorWheel(input_df):
+        fig = px.sunburst(input_df, path=['Parent', 'Child', 'Grandchild'])
+        fig.update_layout(
+            title={
+                'text': "Coffee Tasting Notes",
+                'y':0.95,
+                'x':0.5,
+                'xanchor': 'center',
+                'yanchor': 'top'
+                },
+
+            font=dict(
+                family="eczar semibold",
+                size=18,
+                )
+            )
+        return fig
+
+    #user input data
+    st.subheader("""
+    Your input
+    """)
     df = user_input_features()
     st.write(df)
+    
+    #ghseet data
+    st.subheader("""
+    Coffee data
+    """)
+    df_gsheet = dataGsheet(worksheet, df)
+    st.write(df_gsheet)
+
+    flavorNotes = notesGsheet(df_gsheet)
+    input_df = initDF(flavorNotes, flavor_df_temp)
+    fig = flavorWheel(input_df)
+    st.plotly_chart(fig)
 
     # Magic commands implicitly `st.write()`
     # ''' _This_ is some __Markdown__ '''
@@ -124,10 +214,10 @@ def app():
             df.savory[0], df.body[0], df.clean[0], df.aftertaste[0]]
 
     score1 = [*score1, score1[0]]
-    coffee_id = df.id[0]
+    coffee_name = df_gsheet['Coffee'].iloc[0]
 
-    radar_chart(score1, categories, coffee_id)
-    st.write('Tasting notes: ', df.notes[0])
+    radar_chart(score1, categories, coffee_name)
+    st.write('Tasting notes: ', df['notes'].iloc[0])
 
     # Create an empty dataframe
     data = df

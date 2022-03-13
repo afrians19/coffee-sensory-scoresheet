@@ -1,11 +1,11 @@
-# Espresso Dial-In Web App
+# Coffee Dial-In Web App
 
-## Record and visualize data when dial-in espresso shot using SCA Form
+## Web app of score sheet form for dial-in coffee, useful for: record, upload, and download data, visualization, and flavor wheel
 
 ### Brief description of this app:
-Just like paper form notes when dial-in espresso shot but with this, a digital version **you can re-use and download** the data using your phone and there is a visualization using radar chart to make it easy to understand your shot.
+Just like paper form when dial-in coffee but with this, a digital version **you can record, visualize and download** the data using your browser. The coffe data uploaded from my private google sheet using GCP API.
 
-Data Visualization:
+### Data visualization of basic form using radar chart:
 1. Fragrance/Aroma
 2. Flavor
 3. Aftertaste
@@ -16,4 +16,7 @@ Data Visualization:
 8. Clean Cup
 9. Sweetness
 
-Here's the link to the app: [Espresso SCA Form](https://espresso-sca.herokuapp.com/ "Espresso SCA Form")
+### Tasting notes flavor wheel visualization
+
+
+Here's the link to the app: [Sensory Scoresheet](https://share.streamlit.io/afrians19/coffee-app/main/app.py "Sensory Scoresheet")
