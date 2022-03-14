@@ -124,6 +124,7 @@ def app():
         title = f"Coffee: {name} "
         plt.title(title, size=20, y=1.05)
         lines, labels = plt.thetagrids(np.degrees(label_loc), labels=category)
+        plt.rgrids([1, 2, 3, 4, 5])
         plt.legend()
         plt.show()
         st.pyplot(plt)

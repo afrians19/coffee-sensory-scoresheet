@@ -8,7 +8,6 @@ import datetime
 import gspread
 from google.oauth2.service_account import Credentials
 import plotly.express as px
-
 # data from gsheet <start>
 scopes = [
     'https://www.googleapis.com/auth/spreadsheets',
@@ -107,6 +106,7 @@ def app():
         title = f"Coffee: {name} "
         plt.title(title, size=20, y=1.05)
         lines, labels = plt.thetagrids(np.degrees(label_loc), labels=category)
+        plt.rgrids([1, 2, 3, 4, 5])
         plt.legend()
         plt.show()
         st.pyplot(plt)
@@ -115,8 +115,8 @@ def app():
         df_gsheet = pd.DataFrame(worksheet.get_all_records())
         df_gsheet = df_gsheet.astype(str)
         df_gsheet = df_gsheet[[
-            'Id', 'Coffee', 'Notes', 'Process', 'Profilroast', 
-            'Density', 'Age(days)', 'Age(rdtofreeze)']]
+            'Id', 'Coffee','Age(days)', 'Age(rdtofreeze)', 'Notes', 'Process', 'Profilroast', 
+            'Density']]
 
         #select row based on id 
         values_list = df_gsheet.loc[df_gsheet['Id'] == str(df['id'].iloc[0])]
