@@ -40,7 +40,7 @@ def app():
         # 1st: min | 2nd: max | 3rd: default value
         id = st.sidebar.number_input('id', 0, 1000, 1)
         dose_g = st.sidebar.number_input('Coffee weight (g)', 0.0, 100.0, 20.0)
-        time_s = st.sidebar.number_input('Extraction time (s)', 0, 300, 120)
+        time_s = st.sidebar.number_input('Extraction time (s)', 0, 600, 120)
         yield_ml = st.sidebar.number_input('Yield (ml)', 0, 1000, 45)
         recipe = st.sidebar.slider('Recipe', 1, 1, 5)
         brew_method = st.sidebar.selectbox(
@@ -65,9 +65,9 @@ def app():
         body = st.sidebar.slider('Body', 0.0,5.0,3.0)
         aftertaste = st.sidebar.slider('Aftertaste', 0.0,5.0,3.0)
         rating = st.sidebar.slider('Rating', 0.0,5.0,3.0)
-        notes = st.sidebar.text_input('Notes', 'Tasting Notes')
-        notes_recipe = st.sidebar.text_input('Recipe Notes', 'Recipe Notes')
-        notes_grinder = st.sidebar.text_input('Grinder Notes', 'Grinder Notes')
+        notes = st.sidebar.text_input('Tasting Notes', '')
+        notes_recipe = st.sidebar.text_input('Recipe Notes', '')
+        notes_grinder = st.sidebar.text_input('Grinder Notes', '')
         date_time = datetime.datetime.now()
 
         

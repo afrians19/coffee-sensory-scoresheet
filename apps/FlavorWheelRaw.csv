@@ -25,7 +25,10 @@ Fruity,Other fruit,Pineapple
 Fruity,Other fruit,Apricot
 Fruity,Other fruit,Red Grape
 Fruity,Other fruit,Grape
+Fruity,Other fruit,Ripe Fruits
 Fruity,Other fruit,Apple
+Fruity,Other fruit,Red Apple
+Fruity,Other fruit,Green Apple
 Fruity,Other fruit,Apple Juice
 Fruity,Other fruit,Blackcurrant
 Fruity,Other fruit,Peach
@@ -46,9 +49,10 @@ Fruity,Citrus fruit,Lime
 Fruity,Citrus fruit,Lime Juice
 Fruity,Citrus fruit,Bergamot
 Fruity,Citrus fruit,Blood Orange
-Fruity,Citrus fruit,Mandarin Orange 
+Fruity,Citrus fruit,Mandarin Orange
 Fruity,Citrus fruit,Orange Peel
 Fruity,Citrus fruit,Lemon Zest
+Fruity,Citrus fruit,Citrus
 Sour/fermented,Sour,Sour Aromatics
 Sour/fermented,Sour,Acetic Acid
 Sour/fermented,Sour,Butyric Acid
@@ -56,6 +60,7 @@ Sour/fermented,Sour,Iso-valeric Acid
 Sour/fermented,Sour,Citric Acid
 Sour/fermented,Sour,Malic Acid
 Sour/fermented,Alcohol/fermented,Winey
+Sour/fermented,Alcohol/fermented,Chocolate Liqueur
 Sour/fermented,Alcohol/fermented,Whiskey
 Sour/fermented,Alcohol/fermented,Fermented
 Sour/fermented,Alcohol/fermented,Overripe
