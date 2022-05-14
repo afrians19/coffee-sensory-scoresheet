@@ -48,15 +48,17 @@ def app():
                 (
                     'Modern Espresso', 'Espresso Turbo', 'Espresso Allonge', 'Espresso Londinium', 'Espresso Blooming', 'Espresso Custom', 'Espresso Manual', 'Aeropress', 
                     'French press','Tubruk', 'Pour Over', 'Hybrid Percolation Immersion', 'Cupping'
-                ))        
+                )
+        )        
         roast_profile = st.sidebar.selectbox(
             'Select roast profile', 
                 (
                     'Cinnamon (Ultra Light)', 'New England Roast (Light)', 
                     'American (Medium)','City (Medium)', 'Full City (Medium Dark)', 'Espresso (Dark)', 'French (Dark)', 'Viennese (Dark)', 
                     'Italian (Dark)'
-                ))
-        roasted_days = st.sidebar.number_input('roasted_days', 0,100,5)
+                )
+        )
+        roasted_days = st.sidebar.number_input('Roasted Days', 0,100,5)
         temperature = st.sidebar.slider('Temperature', 80,100,93)
         fragrance_aroma = st.sidebar.slider('Fragrance/Aroma', 0.0,5.0,3.0)
         acidity = st.sidebar.slider('Acidity', 0.0,5.0,3.0)
@@ -67,6 +69,16 @@ def app():
         rating = st.sidebar.slider('Rating', 0.0,5.0,3.0)
         notes = st.sidebar.text_input('Tasting Notes', '')
         notes_recipe = st.sidebar.text_input('Recipe Notes', '')
+        grinder = st.sidebar.selectbox(
+            'Select Grinder', 
+                (
+                    'DF64', 'DF64 SSP MP', 
+                    'DF64 SSP LS','FGM600AD', 'FGM600AD SSP MP', 'FGM600AD SSP LS', 
+                    'FGM600AD SSP HU', 
+                    'C40',
+                )
+        )
+        grinder_setting = st.sidebar.number_input('Grinder Setting', 0,200,72)
         notes_grinder = st.sidebar.text_input('Grinder Notes', '')
         date_time = datetime.datetime.now()
 
@@ -88,6 +100,8 @@ def app():
                 'rating': rating,
                 'notes': notes,
                 'notes_recipe': notes_recipe,
+                'grinder': grinder,
+                'grinder_setting': grinder_setting,
                 'notes_grinder': notes_grinder,
                 'date_time': date_time,
                 'brew_method': brew_method,

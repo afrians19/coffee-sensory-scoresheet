@@ -77,6 +77,16 @@ def app():
         sweetness = st.sidebar.slider('Sweetness', 0,5,3)
         rating = st.sidebar.slider('Rating', 0.0,5.0,3.0)
         notes_recipe = st.sidebar.text_input('', '')
+        grinder = st.sidebar.selectbox(
+            'Select Grinder', 
+                (
+                    'DF64', 'DF64 SSP MP', 
+                    'DF64 SSP LS','FGM600AD', 'FGM600AD SSP MP', 'FGM600AD SSP LS', 
+                    'FGM600AD SSP HU', 
+                    'C40',
+                )
+        )
+        grinder_setting = st.sidebar.number_input('Grinder Setting', 0,200,72)
         notes_grinder = st.sidebar.text_input('', '')
         date_time = datetime.datetime.now()
 
@@ -106,6 +116,8 @@ def app():
                 'rating': rating,
                 'notes': notes,
                 'notes_recipe': notes_recipe,
+                'grinder': grinder,
+                'grinder_setting': grinder_setting,
                 'notes_grinder': notes_grinder,
                 'date_time': date_time,
                 'brew_method': brew_method,                
