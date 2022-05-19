@@ -49,6 +49,13 @@ def app():
                     'Modern Espresso', 'Espresso Turbo', 'Espresso Allonge', 'Espresso Londinium', 'Espresso Blooming', 'Espresso Custom', 'Espresso Manual', 'Aeropress', 
                     'French press','Tubruk', 'Pour Over', 'Hybrid Percolation Immersion', 'Cupping'
                 )
+        )
+        brew_tool = st.sidebar.selectbox(
+            'Select Brew Tool', 
+                (
+                    'V60 01 Ceramic', 'V60 02 Plastic', 'V60 Glass 03', 'V60 Switch 03', 'V60 Switch Hybird', 'April Plastic',
+                    'Suji Wave', 'Mokapot','Vietnam Drip',
+                )
         )        
         roast_profile = st.sidebar.selectbox(
             'Select roast profile', 
@@ -79,7 +86,6 @@ def app():
                 )
         )
         grinder_setting = st.sidebar.number_input('Grinder Setting', 0,200,72)
-        notes_grinder = st.sidebar.text_input('Grinder Notes', '')
         date_time = datetime.datetime.now()
 
         
@@ -102,7 +108,7 @@ def app():
                 'notes_recipe': notes_recipe,
                 'grinder': grinder,
                 'grinder_setting': grinder_setting,
-                'notes_grinder': notes_grinder,
+                'brew_tool': brew_tool,
                 'date_time': date_time,
                 'brew_method': brew_method,
                 }
