@@ -8,7 +8,6 @@ import datetime
 import gspread
 from google.oauth2.service_account import Credentials
 import plotly.express as px
-
 # data from gsheet <start>
 scopes = [
     'https://www.googleapis.com/auth/spreadsheets',
@@ -33,9 +32,9 @@ flavor_df_temp = 'FlavorWheelRaw.csv'
 
 def app():
     st.write("""
-    # Dial in - SCA form
-    """)
+    # Dial in - Basic
 
+    """)
     st.sidebar.header('Input Parameters')
     def user_input_features():
         # 1st: min | 2nd: max | 3rd: default value
@@ -49,41 +48,34 @@ def app():
                 (
                     'Modern Espresso', 'Espresso Turbo', 'Espresso Allonge', 'Espresso Londinium', 'Espresso Blooming', 'Espresso Custom', 'Espresso Manual', 'Aeropress', 
                     'French press','Tubruk', 'Pour Over', 'Hybrid Percolation Immersion', 'Cupping'
-                ))        
+                )
+        )
         brew_tool = st.sidebar.selectbox(
             'Select Brew Tool', 
                 (
-                    'Espresso Machine','V60 01 Ceramic', 'V60 02 Plastic', 'V60 Glass 03', 'V60 Switch 03', 'V60 Switch Hybird', 'April Plastic',
+                    'V60 01 Ceramic', 'V60 02 Plastic', 'V60 Glass 03', 'V60 Switch 03', 'V60 Switch Hybird', 'April Plastic',
                     'Suji Wave', 'Mokapot','Vietnam Drip',
                 )
-        )
+        )        
         roast_profile = st.sidebar.selectbox(
             'Select roast profile', 
                 (
                     'Cinnamon (Ultra Light)', 'New England Roast (Light)', 
                     'American (Medium)','City (Medium)', 'Full City (Medium Dark)', 'Espresso (Dark)', 'French (Dark)', 'Viennese (Dark)', 
                     'Italian (Dark)'
-                ))
-        roasted_days = st.sidebar.number_input('roasted_days', 0,100,5)
+                )
+        )
+        roasted_days = st.sidebar.number_input('Roasted Days', 0,100,5)
         temperature = st.sidebar.slider('Temperature', 80,100,93)
         fragrance_aroma = st.sidebar.slider('Fragrance/Aroma', 0.0,5.0,3.0)
-        dry = st.sidebar.slider('Dry', 0,5,3)
-        qualities_dry = st.sidebar.text_input('Qualities Dry', '')
-        break_ = st.sidebar.slider('Break', 0,5,3)
-        qualities_break = st.sidebar.text_input('Qualities Break', '')
-        flavor = st.sidebar.slider('Flavor', 0.0,5.0,3.0)
-        notes = st.sidebar.text_input('Notes', '')
-        aftertaste = st.sidebar.slider('Aftertaste', 0.0,5.0,3.0)
         acidity = st.sidebar.slider('Acidity', 0.0,5.0,3.0)
-        acidity_intensity = st.sidebar.slider('Acidity Intensity', 0,5,3)
+        sweetness = st.sidebar.slider('Sweetness', 0.0,5.0,3.0)
+        flavor = st.sidebar.slider('Flavor', 0.0,5.0,3.0)    
         body = st.sidebar.slider('Body', 0.0,5.0,3.0)
-        body_level = st.sidebar.slider('Body Level', 0,5,3)
-        uniformity = st.sidebar.slider('Uniformity', 0,5,3)
-        balance = st.sidebar.slider('Balance', 0.0,5.0,3.0)
-        clean_cup = st.sidebar.slider('Clean cup', 0,5,3)
-        sweetness = st.sidebar.slider('Sweetness', 0,5,3)
+        aftertaste = st.sidebar.slider('Aftertaste', 0.0,5.0,3.0)
         rating = st.sidebar.slider('Rating', 0.0,5.0,3.0)
-        notes_recipe = st.sidebar.text_input('', '')
+        notes = st.sidebar.text_input('Tasting Notes', '')
+        notes_recipe = st.sidebar.text_input('Recipe Notes', '')
         grinder = st.sidebar.selectbox(
             'Select Grinder', 
                 (
@@ -96,6 +88,7 @@ def app():
         grinder_setting = st.sidebar.number_input('Grinder Setting', 0,200,72)
         date_time = datetime.datetime.now()
 
+        
         data = {'id': id,
                 'dose_g': dose_g,
                 'time_s': time_s,
@@ -105,28 +98,19 @@ def app():
                 'roasted_days': roasted_days,
                 'temperature': temperature,
                 'fragrance_aroma': fragrance_aroma,
-                'dry': dry,
-                'qualities_dry': qualities_dry,                 
-                'break': break_,
-                'qualities_break': qualities_break,
-                'flavor': flavor,
                 'aftertaste': aftertaste,
                 'acidity': acidity,
-                'acidity_intensity': acidity_intensity,
                 'body': body,
-                'body_level': body_level,
-                'uniformity': uniformity,
-                'balance': balance,
-                'clean_cup': clean_cup,
                 'sweetness': sweetness,
+                'flavor': flavor,
                 'rating': rating,
                 'notes': notes,
                 'notes_recipe': notes_recipe,
                 'grinder': grinder,
                 'grinder_setting': grinder_setting,
-                'date_time': date_time,
-                'brew_method': brew_method, 
                 'brew_tool': brew_tool,
+                'date_time': date_time,
+                'brew_method': brew_method,
                 }
         features = pd.DataFrame(data, index=[0])
         return features
@@ -151,8 +135,8 @@ def app():
         df_gsheet = pd.DataFrame(worksheet.get_all_records())
         df_gsheet = df_gsheet.astype(str)
         df_gsheet = df_gsheet[[
-            'Id', 'Coffee', 'Notes', 'Process', 'Profilroast', 
-            'Density', 'Age(days)', 'Age(rdtofreeze)']]
+            'Id', 'Coffee','Age(days)', 'Age(rdtofreeze)', 'Notes', 'Process', 'Profilroast', 
+            'Density']]
 
         #select row based on id 
         values_list = df_gsheet.loc[df_gsheet['Id'] == str(df['id'].iloc[0])]
@@ -215,14 +199,15 @@ def app():
     input_df = initDF(flavorNotes, flavor_df_temp)
     fig = flavorWheel(input_df)
     st.plotly_chart(fig)
+    
 
-    categories = ['Fragrance/Aroma', 'Flavor', 'Aftertaste', 'Acidity', 'Body', 'Uniformity', 
-                'Balance', 'Clean Cup', 'Sweetness']
+    # Magic commands implicitly `st.write()`
+    # ''' _This_ is some __Markdown__ '''
+
+    categories = ['Aroma', 'Acidity', 'Sweetness', 'Flavor', 'Body', 'After Taste']
     categories = [*categories, categories[0]]
 
-    score1 = [df.fragrance_aroma[0], df.flavor[0], df.aftertaste[0], df.acidity[0], df.body[0], df.uniformity[0],
-            df.balance[0], df.clean_cup[0], df.sweetness[0]]
-
+    score1 = [df.fragrance_aroma[0], df.acidity[0], df.sweetness[0], df.flavor[0], df.body[0], df.aftertaste[0]]
     score1 = [*score1, score1[0]]
     coffee_name = df_gsheet['Coffee'].iloc[0]
 
@@ -254,5 +239,6 @@ def app():
         session_state.df.drop(index=df.index[0], axis=0, inplace=True)
         csv = session_state.df.to_csv(index=False)
         b64 = base64.b64encode(csv.encode()).decode()  # some strings
-        linko= f'<a href="data:file/csv;base64,{b64}" download="sca_form.csv">Download csv file</a>'
+        linko= f'<a href="data:file/csv;base64,{b64}" download="basic.csv">Download csv file</a>'
         st.markdown(linko, unsafe_allow_html=True)
+
